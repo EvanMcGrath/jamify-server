@@ -45,8 +45,8 @@ const scopes = [
 
 
 
-app.post('/login', (req, res) => {
-    const spotifyWebApi = new SpotifyWebApi({
+app.get('/login', (req, res) => {
+    const spotifyApi = new SpotifyWebApi({
         redirectUri: "http://localhost:3000",
         clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
         clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
@@ -57,6 +57,12 @@ app.post('/login', (req, res) => {
 
 app.post('/callback', (req, res) => {
     const code = req.body.code
+
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri: "http://localhost:3000",
+        clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
+        clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
+    })
 
     spotifyApi.authorizationCodeGrant(code)
         .then((data) => {
