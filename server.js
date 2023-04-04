@@ -91,17 +91,35 @@ app.post('/refresh', (req, res) => {
     })
 
     spotifyApi.refreshAccessToken()
-        .then(
-            (data) => {
-                console.log(data.body);
-                res.json({
-                    accessToken: data.body.access_token,
-                    expiresIn: data.body.expires_in,
-                })
+        .then((data) => {
+            console.log(data.body);
+            res.json({
+                accessToken: data.body.access_token,
+                expiresIn: data.body.expires_in,
             })
+        })
         .catch((err) => {
             console.log(err)
             res.sendStatus(400)
+        })
+})
+
+app.post('/me', (req, res) => {
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri: "http://localhost:3000",
+        clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
+        clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
+    })
+
+    spotifyApi.setAccessToken(req.body.access_token)
+
+    spotifyApi.getMe()
+        .then((data) => {
+            console.log(data)
+            res.send(data)
+        })
+        .catch((err) => {
+            console.log(err)
         })
 })
 
