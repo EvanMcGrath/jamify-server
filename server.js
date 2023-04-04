@@ -123,6 +123,24 @@ app.post('/me', (req, res) => {
         })
 })
 
+app.post('/playlists', (req, res) => {
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri: "http://localhost:3000",
+        clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
+        clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
+    })
+
+    spotifyApi.setAccessToken(req.body.access_token)
+
+    spotifyApi.getUserPlaylists()
+        .then((data) => {
+            res.send(data.body)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
+
 
 
 
