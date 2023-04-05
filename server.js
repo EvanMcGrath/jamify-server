@@ -10,13 +10,12 @@ app.use(cors());
 
 
 
-// const credentials = {
-//     redirectUri: "http://localhost:3000",
-//     clientId: "",
-//     clientSecret: "",
-// }
+const spotifyApi = new SpotifyWebApi({
+    redirectUri: "http://localhost:3000",
+    clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
+    clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
+})
 
-// const spotifyApi = new SpotifyWebApi(credentials);
 
 const scopes = [
     'ugc-image-upload',
@@ -46,23 +45,11 @@ const scopes = [
 
 
 app.get('/login', (req, res) => {
-    const spotifyApi = new SpotifyWebApi({
-        redirectUri: "http://localhost:3000",
-        clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
-        clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
-    })
-
     res.redirect(spotifyApi.createAuthorizeURL(scopes));
 })
 
 app.post('/callback', (req, res) => {
     const code = req.body.code
-
-    const spotifyApi = new SpotifyWebApi({
-        redirectUri: "http://localhost:3000",
-        clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
-        clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
-    })
 
     spotifyApi.authorizationCodeGrant(code)
         .then((data) => {
@@ -82,13 +69,8 @@ app.post('/callback', (req, res) => {
 
 app.post('/refresh', (req, res) => {
     const refreshToken = req.body.refreshToken
-    // console.log('hi')
-    const spotifyApi = new SpotifyWebApi({
-        redirectUri: "http://localhost:3000",
-        clientId: "8f147b0115f847e7a7f89e59497029fe",
-        clientSecret: "6396961d17ca4d6d8d17e938e84c7994",
-        refreshToken,
-    })
+
+    spotifyApi.setRefreshToken(refreshToken)
 
     spotifyApi.refreshAccessToken()
         .then((data) => {
@@ -104,12 +86,10 @@ app.post('/refresh', (req, res) => {
         })
 })
 
+
+
+
 app.post('/me', (req, res) => {
-    const spotifyApi = new SpotifyWebApi({
-        redirectUri: "http://localhost:3000",
-        clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
-        clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
-    })
 
     spotifyApi.setAccessToken(req.body.access_token)
 
@@ -123,18 +103,22 @@ app.post('/me', (req, res) => {
         })
 })
 
+
 app.post('/playlists', (req, res) => {
-    const spotifyApi = new SpotifyWebApi({
-        redirectUri: "http://localhost:3000",
-        clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
-        clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
-    })
 
     spotifyApi.setAccessToken(req.body.access_token)
 
     spotifyApi.getUserPlaylists()
         .then((data) => {
             res.send(data.body)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+
+    spotifyApi.getPlaylistTracks("6h9mHzkFkmy4fCPZNxPybD")
+        .then((data) => {
+            console.log(data.body.items)
         })
         .catch((err) => {
             console.log(err)
