@@ -13,7 +13,7 @@ const spotifyApi = new SpotifyWebApi({
 router
     .route('/me')
     .post((req, res) => {
-
+        
         spotifyApi.setAccessToken(req.body.access_token)
 
         const newUserDetails = async () => {
@@ -23,19 +23,32 @@ router
                 return { playlistName: i.name, playlistUri: i.uri }
             })
 
-            const userList = await User.find({ username: { $exists: true, $eq: `${userData.body.uri}` } })
-
-            if (userList) return
-
+            const userList = await User.find({ username: userData.body.id})
+        
+            if (!(userList.length === 0)) return
+            
             const newUser = new User({ 
                 username: userData.body.id,
                 userUri: userData.body.uri,
                 playlists: playlistArray
             })
-            newUser.save()
+            newUser.save();
         }
-
         newUserDetails();
+
+        
+        spotifyApi.getMe()
+            .then((data) => {
+                const currentUserInfo = async () => {
+                    const currentUser = await User.find({ username: data.body.id})
+                    res.send(currentUser)
+                } 
+                currentUserInfo();
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
         // spotifyApi.getMe()
         //     .then((data) => {
 
