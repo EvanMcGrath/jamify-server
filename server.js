@@ -31,7 +31,8 @@ app.use('/userInfo', userInfoRoute);
 
 
 
-
+const playlistInfo = require('./routes/playlistInfoRoute')
+app.use('/playlist', playlistInfo)
 
 
 

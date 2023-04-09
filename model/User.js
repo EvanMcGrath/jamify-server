@@ -6,7 +6,12 @@ const userSchema = new Schema ({
     userUri: String,
     playlists: [{
         playlistName: String,
-        playlistUri: String
+        playlistUri: String,
+        tracks: [{
+            artistName: String,
+            trackName: String, 
+            trackUri: String
+        }]  
     }]
 }) 
 
