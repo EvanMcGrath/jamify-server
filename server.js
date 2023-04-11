@@ -12,12 +12,6 @@ app.use(cors());
 // mongoose.connect('mongodb://127.0.0.1:27017/jamifydb');
 
 
-const spotifyApi = new SpotifyWebApi({
-    redirectUri: "http://localhost:3000",
-    clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
-    clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
-})
-
 
 
 
@@ -36,6 +30,9 @@ app.use('/playlist', playlistInfo)
 
 
 
+
+const songInfo = require('./routes/songInfo')
+app.use('/song', songInfo)
 
 
 
