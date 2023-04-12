@@ -3,54 +3,58 @@ const User = require('../model/User')
 const db = require('../db/dbConnection')
 const mongoose = require('mongoose')
 const SpotifyWebApi = require('spotify-web-api-node')
+
+require('dotenv').config();
+
 const spotifyApi = new SpotifyWebApi({
-    redirectUri: "http://localhost:3100/login/callback",
-    clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
-    clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
+    redirectUri: process.env.REDIRECT_URI,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET
 })
 
 
 router
     .route('/me')
-    .post((req, res) => {
-        console.log(req.body)
-        spotifyApi.setAccessToken(req.body.accessToken)
+    .get((req, res) => {
+        console.log(req.query)
+        spotifyApi.setAccessToken(req.query.accessToken)
 
 
-        // This fetches user details from spotify and writes it to the database
-        // const newUserDetails = async () => {
-        //     const userData = await spotifyApi.getMe()
-        //     const playlistData = await spotifyApi.getUserPlaylists()
-        //     const playlistArray = playlistData.body.items.map((i) => {
-        //         return { playlistName: i.name, playlistUri: i.uri }
-        //     })
+        //// This fetches new user details from spotify and writes it to the database
+        const newUserDetails = async () => {
+           try {
+               const userData = await spotifyApi.getMe()
+               console.log(userData)
+               const playlistData = await spotifyApi.getUserPlaylists()
+               
+               const playlistArray = playlistData.body.items.map((i) => {
+                   return { playlistName: i.name, playlistUri: i.uri }
+               })
+   
+               
+               //// Sends user info and returns function if it is a returning user 
+               const existingUser = await User.find({ username: userData.body.id })
+               if (!(existingUser.length === 0)) {
+                   res.send(existingUser);
+                   console.log(existingUser)
+                   return
+               }
+   
+               //// Save new user details to db and send to frontend
+               const newUser = new User({
+                   username: userData.body.id,
+                   userUri: userData.body.uri,
+                   playlists: playlistArray
+               })
+               res.send(newUser)
+               newUser.save();
+           } catch (e) {
+            console.error(e)
+            res.send(e)
+           }
+        }
+        newUserDetails();
 
-        //     console.log(playlistData.body.items)
-        //     // const userList = await User.find({ username: userData.body.id })
-        //     // if (!(userList.length === 0)) return
-
-        //     // const newUser = new User({
-        //     //     username: userData.body.id,
-        //     //     userUri: userData.body.uri,
-        //     //     playlists: playlistArray
-        //     // })
-        //     // newUser.save();
-        // }
-        // newUserDetails();
-
-
-        ///Gets current user details from database and sends to front end
-        spotifyApi.getMe()
-            .then((data) => {
-                const currentUserInfo = async () => {
-                    const currentUser = await User.find({ username: data.body.id })
-                    res.send(currentUser)
-                }
-                currentUserInfo();
-            })
-            .catch((err) => {
-                console.log(err)
-            })
 
 
     //     const getPlaylistSongs = async () => {

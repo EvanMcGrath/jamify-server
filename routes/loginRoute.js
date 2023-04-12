@@ -2,15 +2,19 @@ const router = require('express').Router();
 const axios = require('axios')
 const querystring = require('querystring')
 const SpotifyWebApi = require('spotify-web-api-node')
+
+require('dotenv').config();
+
 const spotifyApi = new SpotifyWebApi({
-    redirectUri: "http://localhost:3100/login/callback",
-    clientId: "8cb49e1f58254360a20e8bdd9eed37ad",
-    clientSecret: "f09e6b2ed9c24300adfaad0e6542ce09",
+    redirectUri: process.env.REDIRECT_URI,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
 })
 
-const REDIRECT_URI = "http://localhost:3100/login/callback";
-const CLIENT_ID = "8cb49e1f58254360a20e8bdd9eed37ad";
-const CLIENT_SECRET = "f09e6b2ed9c24300adfaad0e6542ce09";
+const REDIRECT_URI = process.env.REDIRECT_URI;
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+
 
 // const scopes = [
 //     'ugc-image-upload',
