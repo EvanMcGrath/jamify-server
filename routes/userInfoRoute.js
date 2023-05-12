@@ -24,27 +24,28 @@ router
            try {
             //    const userData = await spotifyApi.getMe()
                const userData = await axios.get('https://api.spotify.com/v1/me', { headers: { "Authorization": `Bearer ${req.query.accessToken}` }})
-               
+            //    console.log(userData)
                //// If returning user send user info and return function 
                const existingUser = await User.find({ username: userData.data.id })
+
                if (!(existingUser.length === 0)) {
                    res.send(existingUser);
                    return
                }
-               
+
                //// Get new user playlists, save to db and send to frontend
                const playlistData = await spotifyApi.getUserPlaylists()
                const playlistArray = playlistData.body.items.map((i) => {
                    return { playlistName: i.name, playlistUri: i.uri }
                })
-
-               //// Get track info for new users playlists
+               console.log(playlistArray)
+            //    //// Get track info for new users playlists
                getPlaylistSongs();      
 
                
                const newUser = new User({
-                   username: userData.body.id,
-                   userUri: userData.body.uri,
+                   username: userData.data.id,
+                   userUri: userData.data.uri,
                    playlists: playlistArray
                })
 
