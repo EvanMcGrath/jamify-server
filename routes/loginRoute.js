@@ -52,17 +52,15 @@ router
             scope: scopes,
           });
 
-          res.redirect(`https://accounts.spotify.com/authorize?${queryParams}`);    
-        
-        // res.redirect(spotifyApi.createAuthorizeURL(scopes));
-    })
+        res.redirect(`https://accounts.spotify.com/authorize?${queryParams}`);    
+      })
 
 
 router 
     .route('/callback')
     .get((req, res) => {
 
-        const code = req.query.code || null 
+      const code = req.query.code || null 
 
         axios({
             method: 'post',
@@ -93,38 +91,8 @@ router
             .catch(error => {
               res.send(error);
             });
-
-
-        // spotifyApi.authorizationCodeGrant(code)
-        //     .then((data) => {
-        //         console.log(data)
-        //         if (data.status === 200 ) {
-        //             const { access_token, refresh_token, expires_in } = data.body;
-        //             const queryParams = querystring.stringify({
-        //                 access_token,
-        //                 refresh_token,
-        //                 expires_in,
-        //             })
-    
-        //             res.redirect(`http://localhost:3000/?${queryParams}`)
-        //         } else {
-        //             console.log('wtf')
-        //             // res.redirect(`/?${querystring.stringify({ error: 'invalid_token'})}`)
-        //         }
-
-                
-                // res.json({
-                //     accessToken: data.body.access_token,
-                //     refreshToken: data.body.refresh_token,
-                //     expiresIn: data.body.expires_in
-                // })
-            // })
-        
-            // .catch((err) => {
-            //     res.sendStatus(404)
-            //     console.log(err)
-            // })
     });
+
 
 router
     .route('/refresh_token')
@@ -140,24 +108,7 @@ router
                 res.sendStatus(400)
             })
     })
-    // .route('/refresh')
-    // .post((req, res) => {
-    //     const refreshToken = req.body.refreshToken
-    
-    //     spotifyApi.setRefreshToken(refreshToken)
-    
-    //     spotifyApi.refreshAccessToken()
-    //         .then((data) => {
-    //             res.json({
-    //                 accessToken: data.body.access_token,
-    //                 expiresIn: data.body.expires_in,
-    //             })
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //             res.sendStatus(400)
-    //         })
-    // })
+
 
 module.exports = router;
     
