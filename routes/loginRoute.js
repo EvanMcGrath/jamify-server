@@ -1,7 +1,7 @@
-const router = require('express').Router();
-const axios = require('axios')
-const querystring = require('querystring')
-const SpotifyWebApi = require('spotify-web-api-node')
+import express from 'express';
+import axios from 'axios';
+import querystring from 'querystring';
+import SpotifyWebApi from 'spotify-web-api-node'
 
 require('dotenv').config();
 
@@ -40,6 +40,8 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 
 const scopes = 'ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing streaming app-remote-control user-read-email user-read-private playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private user-library-modify user-library-read user-top-read user-read-playback-position user-read-recently-played user-follow-read user-follow-modify'
+
+const router = express.Router();
 
 router
     .route('/')
@@ -110,5 +112,5 @@ router
     })
 
 
-module.exports = router;
+export default router;
     

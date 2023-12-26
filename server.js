@@ -1,23 +1,28 @@
-const express = require('express');
+// import { Express } from 'express';
+// const cors = require('cors')
+import cors from 'cors';
+import express from 'express'
+
 const app = express();
 const PORT = 3100
-const cors = require('cors')
+
 
 // Middleware 
 app.use(express.json());
 app.use(cors());
 
 // Routes
-const loginRoute = require('./routes/loginRoute')
+import loginRoute from './routes/loginRoute.js'
+console.log(loginRoute)
 app.use('/login', loginRoute);
 
-const userInfoRoute = require('./routes/userInfoRoute')
+import userInfoRoute from './routes/userInfoRoute.js'
 app.use('/userInfo', userInfoRoute);
 
-const playlistInfo = require('./routes/playlistInfoRoute')
+import playlistInfo from './routes/playlistInfoRoute.js'
 app.use('/playlist', playlistInfo)
 
-const songInfo = require('./routes/songInfo')
+import songInfo from './routes/songInfo.js'
 app.use('/song', songInfo)
 
 // Initialize server 
