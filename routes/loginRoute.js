@@ -2,8 +2,10 @@ import express from 'express';
 import axios from 'axios';
 import querystring from 'querystring';
 import SpotifyWebApi from 'spotify-web-api-node'
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+const router = express.Router();
+dotenv.config();
 
 const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.REDIRECT_URI,
@@ -14,34 +16,7 @@ const spotifyApi = new SpotifyWebApi({
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-
-
-// const scopes = [
-//     'ugc-image-upload',
-//     'user-read-playback-state',
-//     'user-modify-playback-state',
-//     'user-read-currently-playing',
-//     'streaming',
-//     'app-remote-control',
-//     'user-read-email',
-//     'user-read-private',
-//     'playlist-read-collaborative',
-//     'playlist-modify-public',
-//     'playlist-read-private',
-//     'playlist-modify-private',
-//     'user-library-modify',
-//     'user-library-read',
-//     'user-top-read',
-//     'user-read-playback-position',
-//     'user-read-recently-played',
-//     'user-follow-read',
-//     'user-follow-modify'
-// ];
-
-
-const scopes = 'ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing streaming app-remote-control user-read-email user-read-private playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private user-library-modify user-library-read user-top-read user-read-playback-position user-read-recently-played user-follow-read user-follow-modify'
-
-const router = express.Router();
+const scopes = process.env.SCOPES;
 
 router
     .route('/')
@@ -56,7 +31,6 @@ router
 
         res.redirect(`https://accounts.spotify.com/authorize?${queryParams}`);    
       })
-
 
 router 
     .route('/callback')
@@ -111,6 +85,4 @@ router
             })
     })
 
-
-export default router;
-    
+export default router;    

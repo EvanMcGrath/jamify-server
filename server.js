@@ -13,7 +13,6 @@ app.use(cors());
 
 // Routes
 import loginRoute from './routes/loginRoute.js'
-console.log(loginRoute)
 app.use('/login', loginRoute);
 
 import userInfoRoute from './routes/userInfoRoute.js'

@@ -1,9 +1,10 @@
-const router = require('express').Router();
-const db = require('../db/dbConnection')
-const User = require('../model/User')
-const mongoose = require('mongoose')
-const SpotifyWebApi = require('spotify-web-api-node')
-require('dotenv').config();
+import express from 'express';
+import User from '../model/User.js';
+import SpotifyWebApi from 'spotify-web-api-node';
+import dotenv from 'dotenv'
+
+const router = express.Router();
+dotenv.config();
 
 const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.REDIRECT_URI,
@@ -21,14 +22,11 @@ router
         const playlistSongs = async () => {
             const userData = await spotifyApi.getMe()
             const userObj = await User.find({ username: userData.body.id })
-            
             const allPlaylists = userObj[0].playlists
-           
-        
-
             res.send(allPlaylists.id(id))
         }
+
         playlistSongs()
     })
 
-module.exports = router;
+export default router;

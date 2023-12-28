@@ -1,11 +1,11 @@
-const router = require('express').Router();
-const User = require('../model/User')
-const db = require('../db/dbConnection')
-const mongoose = require('mongoose')
-const SpotifyWebApi = require('spotify-web-api-node')
-const axios = require('axios')
+import express from 'express';
+import User from '../model/User.js';
+import SpotifyWebApi from 'spotify-web-api-node';
+import axios from 'axios';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+const router = express.Router();
+dotenv.config();
 
 const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.REDIRECT_URI,
@@ -22,9 +22,7 @@ router
         //// This fetches new user details from spotify and writes it to the database
         const newUserDetails = async () => {
            try {
-            //    const userData = await spotifyApi.getMe()
                const userData = await axios.get('https://api.spotify.com/v1/me', { headers: { "Authorization": `Bearer ${req.query.accessToken}` }})
-            //    console.log(userData)
                //// If returning user send user info and return function 
                const existingUser = await User.find({ username: userData.data.id })
 
@@ -33,16 +31,14 @@ router
                    return
                }
 
-               //// Get new user playlists, save to db and send to frontend
+               // Get new user playlists, save to db and send to frontend
                const playlistData = await spotifyApi.getUserPlaylists()
                const playlistArray = playlistData.body.items.map((i) => {
                    return { playlistName: i.name, playlistUri: i.uri }
                })
-               console.log(playlistArray)
-            //    //// Get track info for new users playlists
+                // Get track info for new users playlists
                getPlaylistSongs();      
 
-               
                const newUser = new User({
                    username: userData.data.id,
                    userUri: userData.data.uri,
@@ -58,8 +54,6 @@ router
            }
         }
         newUserDetails();
-
-
 
         const getPlaylistSongs = async () => {
             const userData = await axios.get('https://api.spotify.com/v1/me', { headers: { "Authorization": `Bearer ${req.query.accessToken}` }})
@@ -80,14 +74,4 @@ router
         } 
 })
 
-
-
-
-
-
-
-
-
-
-
-module.exports = router;
+export default router;
