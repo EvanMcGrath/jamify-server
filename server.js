@@ -2,7 +2,6 @@ import cors from 'cors';
 import express from 'express'
 
 const app = express();
-const PORT = 3100
 
 // Middleware 
 app.use(express.json());
@@ -20,6 +19,6 @@ app.use('/playlist', playlistInfo)
 app.use('/song', songInfo)
 
 // Initialize server 
-app.listen(PORT, () => {
-    console.log(`listening on ${PORT}`)
+app.listen(() => { 
+    console.log(`listening on ${process.env.PORT || 3100}`)
 })

@@ -13,7 +13,6 @@ const spotifyApi = new SpotifyWebApi({
     clientSecret: process.env.CLIENT_SECRET
 })
 
-
 router
     .route('/me')
     .get((req, res) => {
